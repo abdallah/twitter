@@ -1,12 +1,12 @@
-try:
-    import urllib.request as urllib_request
-    import urllib.error as urllib_error
-except ImportError:
-    import urllib2 as urllib_request
-    import urllib2 as urllib_error
+import urllib2 as urllib_request
+import urllib2 as urllib_error
 
 from twitter.twitter_globals import POST_ACTIONS
 from twitter.auth import NoAuth
+
+from poster.encode import multipart_encode
+from poster.streaminghttp import register_openers
+register_openers()
 
 try:
     import json
@@ -99,6 +99,7 @@ class TwitterCall(object):
         self.uri = uri
         self.uriparts = uriparts
         self.secure = secure
+        register_openers()
 
     def __getattr__(self, k):
         try:
@@ -136,6 +137,9 @@ class TwitterCall(object):
         dot = ""
         if self.format:
             dot = "."
+        if kwargs.has_key('media'):
+            media = kwargs.pop('media')
+            self.domain = 'upload.twitter.com'
         uriBase = "http%s://%s/%s%s%s" %(
                     secure_str, self.domain, uri, dot, self.format)
 
@@ -147,7 +151,8 @@ class TwitterCall(object):
                 uriBase += '?' + arg_data
                 body = None
             else:
-                body = arg_data.encode('utf8')
+                uriBase += '?' + arg_data.encode('utf8')
+                body, headers = multipart_encode({'media[]': open(media, 'rb')})
 
         req = urllib_request.Request(uriBase, body, headers)
         return self._handle_response(req, uri, arg_data)
