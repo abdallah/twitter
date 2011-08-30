@@ -4,6 +4,7 @@ import urllib2 as urllib_error
 from twitter.twitter_globals import POST_ACTIONS
 from twitter.auth import NoAuth
 
+# poster from http://atlee.ca/software/poster/ 
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 register_openers()
@@ -191,6 +192,9 @@ class Twitter(TwitterCall):
 
       # Get the public timeline
       twitter.statuses.public_timeline()
+      
+      # Post an update with media
+      twitter.statuses.update_with_media(status="bla bla bla", media=image.path)
 
       # Get a particular friend's timeline
       twitter.statuses.friends_timeline(id="billybob")
