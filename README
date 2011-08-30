@@ -1,5 +1,10 @@
 Python Twitter Tools
 ====================
+(forked from sixohsix/twitter)
+
+Added a dependency to Poster [http://atlee.ca/software/poster/] to implement update_with_media
+> twitter = Twitter(auth=OAuth(token, token_secret, consumer_key, consumer_secret))
+> twitter.statuses.update_with_media(status="Updating with picture", media=image.path)
 
 The Minimalist Twitter API for Python is a Python API for Twitter,
 everyone's favorite Web 2.0 Facebook-style status updater for people
